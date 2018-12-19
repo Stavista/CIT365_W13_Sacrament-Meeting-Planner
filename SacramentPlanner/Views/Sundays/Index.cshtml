@@ -4,18 +4,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+
+<h2>History</h2>
 
 <h4>
     <a asp-action="Create">Plan New</a>
 </h4>
 
+<form asp-controller="Sundays" asp-action="Index">
+    <p>
+        Conductor: <input type="text" name="SearchString">
+        <input type="submit" value="Filter" />
+    </p>
+</form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
+                </a>
             </th>
             <th style="text-align:center;">
                 Details
@@ -80,33 +88,34 @@
                     </dl>
                 </td>
                 <td>
-                    <dd>
+                    <dl>
                         @if (item.Speakers != null)
                         {
-                            <table class="table">
-                                <tr>
+                            @*<table class="table" style="border-top:none;">*@
+                            @*<tr>
                                     <th>Order</th>
                                     <th>Speaker</th>
-                                </tr>
+                                </tr>*@
 
-                                @foreach (var speaker in item.Speakers)
-                                {
-                                    <tr>
+                            @foreach (var speaker in item.Speakers)
+                            {
+                                @*<tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => speaker)
-                                        </td>
+                                                @Html.DisplayFor(modelItem => speaker)
+                                            </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => speaker.Name)
                                         </td>
-                                    </tr>
-                                }
-                            </table>
+                                    </tr>*@
+                                <dd>@Html.DisplayFor(modelItem => speaker.Name)</dd>
+                            }
+                            @*</table>*@
                         }
                         else
                         {
                             <p>None</p>
                         }
-                    </dd>
+                    </dl>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

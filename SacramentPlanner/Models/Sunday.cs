@@ -9,8 +9,10 @@ namespace SacramentPlanner.Models
         public int Id { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
+        [Required]
         public String Conductor { get; set; }
 
         [Display(Name = "Opening Hymn")]
@@ -26,11 +28,13 @@ namespace SacramentPlanner.Models
         public String IntermediateSong { get; set; }
 
         [Display(Name = "Opening Prayer")]
+        [Required]
         public String OpeningPrayer { get; set; }
 
         [Display(Name = "Closing Prayer")]
+        [Required]
         public String ClosingPrayer { get; set; }
 
-        public ICollection<Speaker> Speakers { get; set; }
+        public virtual ICollection<Speaker> Speakers { get; set; }
     }
 }

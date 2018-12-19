@@ -9,33 +9,23 @@ using SacramentPlanner.Models;
 
 namespace SacramentPlanner.Controllers
 {
-    public class SundaysController : Controller
+    public class SpeakersController : Controller
     {
         private readonly SacramentPlannerContext _context;
 
-        public SundaysController(SacramentPlannerContext context)
+        public SpeakersController(SacramentPlannerContext context)
         {
             _context = context;
         }
 
-        // GET: Sundays
-        public async Task<IActionResult> Index(string searchString)
+        // GET: Speakers
+        public async Task<IActionResult> Index()
         {
-            var sunday = from s in _context.Sunday select s;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                sunday = sunday.Where(s => s.Conductor.Contains(searchString));
-            }
-            
-            foreach(var s in sunday)
-            {
-                s.Speakers = _context.Speaker.Where(x => x.Sunday.Id == s.Id).ToList();
-            }
-            return View(await sunday.ToListAsync());
+            var sacramentPlannerContext = _context.Speaker.Include(s => s.Sunday);
+            return View(await sacramentPlannerContext.ToListAsync());
         }
 
-        // GET: Sundays/Details/5
+        // GET: Speakers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,39 +33,42 @@ namespace SacramentPlanner.Controllers
                 return NotFound();
             }
 
-            var sunday = await _context.Sunday
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sunday == null)
+            var speaker = await _context.Speaker
+                .Include(s => s.Sunday)
+                .FirstOrDefaultAsync(m => m.SpeakerID == id);
+            if (speaker == null)
             {
                 return NotFound();
             }
 
-            return View(sunday);
+            return View(speaker);
         }
 
-        // GET: Sundays/Create
+        // GET: Speakers/Create
         public IActionResult Create()
         {
+            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "Date");
             return View();
         }
 
-        // POST: Sundays/Create
+        // POST: Speakers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Date,Conductor,OpeningHymn,ClosingHymn,SacramentHymn,IntermediateSong,OpeningPrayer,ClosingPrayer,Speakers")] Sunday sunday)
+        public async Task<IActionResult> Create([Bind("SpeakerID,SundayID,Name")] Speaker speaker)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sunday);
+                _context.Add(speaker);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(sunday);
+            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "ClosingPrayer", speaker.SundayID);
+            return View(speaker);
         }
 
-        // GET: Sundays/Edit/5
+        // GET: Speakers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,22 +76,23 @@ namespace SacramentPlanner.Controllers
                 return NotFound();
             }
 
-            var sunday = await _context.Sunday.FindAsync(id);
-            if (sunday == null)
+            var speaker = await _context.Speaker.FindAsync(id);
+            if (speaker == null)
             {
                 return NotFound();
             }
-            return View(sunday);
+            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "ClosingPrayer", speaker.SundayID);
+            return View(speaker);
         }
 
-        // POST: Sundays/Edit/5
+        // POST: Speakers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Conductor,OpeningHymn,ClosingHymn,SacramentHymn,IntermediateSong,OpeningPrayer,ClosingPrayer")] Sunday sunday)
+        public async Task<IActionResult> Edit(int id, [Bind("SpeakerID,SundayID,Name")] Speaker speaker)
         {
-            if (id != sunday.Id)
+            if (id != speaker.SpeakerID)
             {
                 return NotFound();
             }
@@ -107,12 +101,12 @@ namespace SacramentPlanner.Controllers
             {
                 try
                 {
-                    _context.Update(sunday);
+                    _context.Update(speaker);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SundayExists(sunday.Id))
+                    if (!SpeakerExists(speaker.SpeakerID))
                     {
                         return NotFound();
                     }
@@ -123,10 +117,11 @@ namespace SacramentPlanner.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sunday);
+            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "ClosingPrayer", speaker.SundayID);
+            return View(speaker);
         }
 
-        // GET: Sundays/Delete/5
+        // GET: Speakers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,30 +129,31 @@ namespace SacramentPlanner.Controllers
                 return NotFound();
             }
 
-            var sunday = await _context.Sunday
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sunday == null)
+            var speaker = await _context.Speaker
+                .Include(s => s.Sunday)
+                .FirstOrDefaultAsync(m => m.SpeakerID == id);
+            if (speaker == null)
             {
                 return NotFound();
             }
 
-            return View(sunday);
+            return View(speaker);
         }
 
-        // POST: Sundays/Delete/5
+        // POST: Speakers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sunday = await _context.Sunday.FindAsync(id);
-            _context.Sunday.Remove(sunday);
+            var speaker = await _context.Speaker.FindAsync(id);
+            _context.Speaker.Remove(speaker);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SundayExists(int id)
+        private bool SpeakerExists(int id)
         {
-            return _context.Sunday.Any(e => e.Id == id);
+            return _context.Speaker.Any(e => e.SpeakerID == id);
         }
     }
 }
