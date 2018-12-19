@@ -17,7 +17,7 @@ namespace SacramentPlanner.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Please add a new sacrament meeting plan.";
 
             return View();
         }
