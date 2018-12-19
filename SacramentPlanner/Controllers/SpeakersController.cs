@@ -64,7 +64,7 @@ namespace SacramentPlanner.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "ClosingPrayer", speaker.SundayID);
+            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "Date", speaker.SundayID);
             return View(speaker);
         }
 
@@ -81,7 +81,7 @@ namespace SacramentPlanner.Controllers
             {
                 return NotFound();
             }
-            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "ClosingPrayer", speaker.SundayID);
+            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "Date", speaker.SundayID);
             return View(speaker);
         }
 
