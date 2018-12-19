@@ -17,6 +17,9 @@ namespace SacramentPlanner.Models
         [Required]
         public String Name { get; set; }
 
+        [Required]
+        public String Subject { get; set; }
+
         public Sunday Sunday { get; set; }
     }
 }

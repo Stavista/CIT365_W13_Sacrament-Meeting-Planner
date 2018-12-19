@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SacramentPlanner.Models.Sunday>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "History";
 }
 
 
@@ -93,7 +93,8 @@
                         {
                             @foreach (var speaker in item.Speakers)
                             {
-                                <dd>@Html.DisplayFor(modelItem => speaker.Name)</dd>
+                                <dt>@Html.DisplayFor(modelItem => speaker.Name)</dt>
+                                <dd>@Html.DisplayFor(modelItem => speaker.Subject)</dd>
                             }
                         }
                         else

@@ -56,7 +56,7 @@ namespace SacramentPlanner.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SpeakerID,SundayID,Name")] Speaker speaker)
+        public async Task<IActionResult> Create([Bind("SpeakerID,SundayID,Name,Subject")] Speaker speaker)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace SacramentPlanner.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SpeakerID,SundayID,Name")] Speaker speaker)
+        public async Task<IActionResult> Edit(int id, [Bind("SpeakerID,SundayID,Name,Subject")] Speaker speaker)
         {
             if (id != speaker.SpeakerID)
             {
@@ -117,7 +117,7 @@ namespace SacramentPlanner.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "ClosingPrayer", speaker.SundayID);
+            ViewData["SundayID"] = new SelectList(_context.Sunday, "Id", "Date", speaker.SundayID);
             return View(speaker);
         }
 
